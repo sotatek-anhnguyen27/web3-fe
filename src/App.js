@@ -19,6 +19,7 @@ import * as ethMultiCall from "ethereum-multicall";
 import { getDataFromResultMultiCall } from "./shared/helpers";
 import { Modal, notification } from "antd";
 import ModalWriteContract from "./component/ModalWriteContract";
+import HistoryTable from "./component/HistoryTable";
 
 const INFURA_KEY = "438e89e17a55438897a1e5a5590211b0";
 const WALLET_CONNECT_BRIDGE_URL = "https://bridge.walletconnect.org";
@@ -91,7 +92,9 @@ function App() {
 
   const handleDeposit = async (amount) => {
     try {
-      await masterChefContract.methods.deposit(Web3.utils.toWei(String(amount), 'ether')).send({ from: account });
+      await masterChefContract.methods
+        .deposit(Web3.utils.toWei(String(amount), "ether"))
+        .send({ from: account });
       openNotificationWithIcon(
         "success",
         "transaction notification",
@@ -106,7 +109,9 @@ function App() {
 
   const handleWithDraw = async (amount) => {
     try {
-      await masterChefContract.methods.withdraw(Web3.utils.toWei(String(amount), 'ether')).send({ from: account });
+      await masterChefContract.methods
+        .withdraw(Web3.utils.toWei(String(amount), "ether"))
+        .send({ from: account });
       openNotificationWithIcon(
         "success",
         "transaction notification",
@@ -125,7 +130,6 @@ function App() {
   };
   const getStaticInfo = async () => {
     try {
-      console.log("web3", web3);
       const multiCall = new ethMultiCall.Multicall({
         web3Instance: web3,
         tryAggregate: true,
@@ -245,18 +249,23 @@ function App() {
   return (
     <div className="App">
       {account ? (
-        <MainBox
-          account={account}
-          balance={balance}
-          balanceEarnDD2={balanceEarnDD2}
-          stake={stake}
-          totalStake={totalStake}
-          balanceAllowance={balanceAllowance}
-          handleApproved={handleApproved}
-          handleHarvest={() => {handleDeposit(0)}}
-          handleDeposit={showDepositModal}
-          handleWithDraw={showWithDrawModalVisible}
-        />
+        <>
+          <MainBox
+            account={account}
+            balance={balance}
+            balanceEarnDD2={balanceEarnDD2}
+            stake={stake}
+            totalStake={totalStake}
+            balanceAllowance={balanceAllowance}
+            handleApproved={handleApproved}
+            handleHarvest={() => {
+              handleDeposit(0);
+            }}
+            handleDeposit={showDepositModal}
+            handleWithDraw={showWithDrawModalVisible}
+          />
+          <HistoryTable></HistoryTable>
+        </>
       ) : (
         <ConnectBox
           connectInjectedConnector={connectInjectedConnector}
