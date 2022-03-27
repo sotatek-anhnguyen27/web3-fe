@@ -11,11 +11,11 @@ const HistoryTable = () => {
         account
         amount
         time
+        method
       }
-    }
+    }    
   `);
 
-  console.log('data', data);
     const columns = [
         {
           title: 'Action',
